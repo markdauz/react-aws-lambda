@@ -1,33 +1,27 @@
 const AWS = require('aws-sdk');
 
-const updateTodo = async (event) => {
+const deleteTodo = async (event) => {
   const dynamodb = new AWS.DynamoDB.DocumentClient();
-  const { todo } = JSON.parse(event.body);
   const { id } = event.pathParameters;
 
   await dynamodb
-    .update({
+    .delete({
       TableName: 'TodoTable',
       Key: { id },
-      UpdateExpression: 'set todo = :todo',
-      ExpressionAttributeValues: {
-        ':todo': todo,
-      },
-      ReturnValues: 'ALL_NEW',
     })
     .promise();
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ msg: 'Todo Updated' }),
+    body: JSON.stringify({}),
     headers: {
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT',
+      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
     },
   };
 };
 
 module.exports = {
-  handler: updateTodo,
+  handler: deleteTodo,
 };

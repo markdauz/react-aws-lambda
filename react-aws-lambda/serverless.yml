@@ -11,7 +11,7 @@ provider:
       Action:
         - dynamodb:*
       Resource:
-        -
+        - arn:aws:dynamodb:us-east-1:939642016305:table/TodoTable
 
 functions:
   addTodo:
@@ -38,6 +38,13 @@ functions:
       - httpApi:
           path: /todo/{id}
           method: put
+
+  deleteTodo:
+    handler: src/deleteTodo.handler
+    events:
+      - httpApi:
+          path: /todo/{id}
+          method: delete
 
 resources:
   Resources:

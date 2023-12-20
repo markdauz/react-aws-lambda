@@ -21,6 +21,11 @@ const fetchTodo = async (event) => {
   return {
     statusCode: 200,
     body: JSON.stringify(todo),
+    headers: {
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
+    },
   };
 };
 
