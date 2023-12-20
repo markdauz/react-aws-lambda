@@ -1,10 +1,11 @@
-service: aws-node-http-api-project
+org: markdauz
+app: aws-node-http-api-project
+service: react-aws-lambda
 frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs18.x
-  region: us-east-1
   iamRoleStatements:
     - Effect: Allow
       Action:
