@@ -5,31 +5,27 @@ import axios from 'axios';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState({});
+  const [todo, setTodo] = useState(undefined);
+
+  const AWS_URL = 'https://fjghc4nrzb.execute-api.us-east-1.amazonaws.com/';
 
   const addTodo = async (todo) => {
+    if (todo.trim() === '') return;
     setTodos([...todos, { todo }]);
     // AWS
-    await axios.post(
-      'https://86mzb46o60.execute-api.us-east-1.amazonaws.com/',
-      { todo }
-    );
+    await axios.post(AWS_URL, { todo });
+    fetchTodos();
   };
 
   const deleteTodo = async (id) => {
     // AWS
-    await axios.delete(
-      `https://86mzb46o60.execute-api.us-east-1.amazonaws.com/todo/${id}`
-    );
+    await axios.delete(`${AWS_URL}todo/${id}`);
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const updateTodo = async (id, newText) => {
     // AWS
-    await axios.put(
-      `https://86mzb46o60.execute-api.us-east-1.amazonaws.com/todo/${id}`,
-      { todo: newText }
-    );
+    await axios.put(`${AWS_URL}todo/${id}`, { todo: newText });
     setTodos(
       todos.map((todo) => (todo.id === id ? { ...todo, todo: newText } : todo))
     );
@@ -37,15 +33,14 @@ const App = () => {
 
   const fetchTodos = async () => {
     // AWS
-    const getUrl =
-      'https://86mzb46o60.execute-api.us-east-1.amazonaws.com/todos';
+    const getUrl = `${AWS_URL}todos`;
     try {
       const response = await axios.get(getUrl, {
         method: 'GET',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
       });
-
+      console.log(response);
       setTodos(response?.data);
     } catch (error) {
       console.log(error);
@@ -53,10 +48,17 @@ const App = () => {
   };
 
   const fetchTodo = async (id) => {
-    const response = await axios.get(
-      `https://86mzb46o60.execute-api.us-east-1.amazonaws.com/todo/${id}`
-    );
-    setTodo(response?.data?.todo);
+    try {
+      const response = await axios.get(`${AWS_URL}todo/${id}`, {
+        method: 'GET',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      setTodo(response?.data?.todo);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -73,8 +75,10 @@ const App = () => {
         onUpdate={updateTodo}
         onFetchTodo={fetchTodo}
       />
-      {/*  */}
-      <h3>{todo}</h3>
+
+      {todo !== undefined || Object.keys(todo || {}).length === 0 ? (
+        <h3>{todo}</h3>
+      ) : null}
     </div>
   );
 };

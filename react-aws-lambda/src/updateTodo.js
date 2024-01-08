@@ -5,6 +5,8 @@ const updateTodo = async (event) => {
   const { todo } = JSON.parse(event.body);
   const { id } = event.pathParameters;
 
+  console.log(id);
+
   await dynamodb
     .update({
       TableName: 'TodoTable',

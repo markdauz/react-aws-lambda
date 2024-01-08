@@ -4,11 +4,6 @@ const Todo = ({ todo, onDelete, onUpdate, onFetchTodo }) => {
   const [isEditing, setEditing] = useState(false);
   const [newText, setNewText] = useState(todo.todo);
 
-  const handleUpdate = () => {
-    onUpdate(todo.id, newText);
-    setEditing(false);
-  };
-
   return (
     <div>
       {isEditing ? (
@@ -18,7 +13,14 @@ const Todo = ({ todo, onDelete, onUpdate, onFetchTodo }) => {
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
           />
-          <button onClick={handleUpdate}>Update</button>
+          <button
+            onClick={() => {
+              onUpdate(todo.id, newText);
+              setEditing(false);
+            }}
+          >
+            Update
+          </button>
         </div>
       ) : (
         <div>
